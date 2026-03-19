@@ -4,7 +4,7 @@ This project includes a Python script designed to automate the creation of user 
 
 This helps reduce manual work and ensures consistency when managing multiple users.
 
----
+
 
 ## Program Operation
 The script is executed by redirecting an input file into it. Each line in the input file represents a user and contains all necessary details.
@@ -13,7 +13,7 @@ Run the script using:
 
 ./create-users.py < create-users.input
 
----
+
 
 ## Input File Format
 Each line in the input file must follow this format:
@@ -27,7 +27,7 @@ user06:pass06:Last06:First06:group01,group02.
 - Lines starting with `#` are treated as comments and ignored.
 - Lines that do not contain exactly 5 fields are skipped.
 
----
+
 
 ## Command Execution
 The script builds and executes system commands such as:
@@ -38,19 +38,19 @@ The script builds and executes system commands such as:
 
 These commands are executed using Python’s `os.system()` function.
 
----
+
 
 ## Dry Run
 Before running the script on the system, it can be tested in "dry run" mode. In this mode, commands are printed instead of executed, allowing verification without making changes.
 
----
+
 
 ## Files Included
 - create-users.py — Python script for user creation. 
 - create-users.input — Input file with user data. 
 - README.md — Project documentation.
 
----
+
 
 ## Summary
 This script demonstrates how automation can simplify system administration by efficiently creating and managing user accounts using structured input data.
