@@ -1,73 +1,83 @@
 #!/usr/bin/python3
 
+# This script reads user data from standard input (create-users.input)
+# Each valid line contains user info separated by colons
+# The script creates users, sets passwords, and assigns groups
+
 # INET4031
 # Shuayb Yusuf
 # Date Created: 03/19/2026
 # Date Last Modified: 03/19/2026
 
-# os: used to run system commands
-# re: used to detect comment lines starting with '#'
-# sys: used to read input from stdin (input file)
+# os: executes system commands (adduser, passwd)
+# re: checks for comment lines starting with '#'
+# sys: reads input from standard input (stdin)
 import os
 import re
 import sys
 
+
 def main():
-    # Read each line from the input file
+    # Loop through each line from the input file
+    # (input is redirected using < create-users.input)
     for line in sys.stdin:
 
-        # Check if line starts with '#' (comment line)
+        # Check if the line is a comment (starts with '#')
         match = re.match("^#", line)
 
-        # Remove whitespace and split by colon
+        # Remove extra whitespace and split line into fields using ':'
         fields = line.strip().split(':')
 
-        # Skip comments or malformed lines (not exactly 5 fields)
+        # Skip comment lines or incorrectly formatted lines
+        # A valid line must have exactly 5 fields
         if match or len(fields) != 5:
             continue
 
-        # Extract values from fields
+        # Extract user information from fields
         username = fields[0]
         password = fields[1]
 
-        # Format full name (GECOS field in /etc/passwd)
+        # Format the full name for the GECOS field (used in /etc/passwd)
         gecos = "%s %s,,," % (fields[3], fields[2])
 
-        # Split group list by commas
+        # Split group list into individual groups
         groups = fields[4].split(',')
 
-        # Show user creation step
+        # Display message for user creation
         print("==> Creating account for %s..." % username)
 
-        # Build command to create user
+        # Build the command to create the user
         cmd = "/usr/sbin/adduser --disabled-password --gecos '%s' %s" % (gecos, username)
 
-        # Dry run (print instead of execute)
+        # Print and execute the command
         print(cmd)
-        # os.system(cmd)
+        os.system(cmd)
 
-        # Show password setting step
+        # Display message for password setup
         print("==> Setting the password for %s..." % username)
 
-        # Build command to set password
+        # Build the command to set the user's password
         cmd = "/bin/echo -ne '%s\n%s' | /usr/bin/sudo /usr/bin/passwd %s" % (password, password, username)
 
-        # Dry run
+        # Print and execute the command
         print(cmd)
-        # os.system(cmd)
+        os.system(cmd)
 
-        # Assign user to groups
+        # Loop through each group and assign user
         for group in groups:
-            # Skip if group is '-'
+
+            # Skip placeholder '-' (means no group)
             if group != '-':
                 print("==> Assigning %s to the %s group..." % (username, group))
 
                 # Build command to add user to group
                 cmd = "/usr/sbin/adduser %s %s" % (username, group)
 
-                # Dry run
+                # Print and execute the command
                 print(cmd)
-                # os.system(cmd)
+                os.system(cmd)
 
+
+# Run the main function
 if __name__ == '__main__':
     main()
